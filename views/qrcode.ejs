@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>QRcode</title>
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/png">
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+    </head>
+    <body>
+        <header>
+            <div>
+                <nav>
+                    <a class="nav-a" href="/">Главная</a>
+                    <a>|</a>
+                   <!-- <a class="nav-a" href="/order_info/">Таблица</a> -->
+                    <a class="nav-a" href="/qrcode">QRcode</a>
+                    <a>|</a>
+                    <form class="search ">
+                        <input class="search-input" type="text" placeholder="Поиск...">
+                    </form>
+                  <!-- <a class="nav-a">Поиск</a> -->
+                </nav>
+            </div> 
+        </header>
+
+        <div class="container">
+            <h1>Новый QRcode: <br><%= qr_image %></h1>
+            <div class="QRimage">
+                <img src="/images/qrcodes/<%= qr_image %>.png">
+            </div>
+            <div class="QRimage">
+                <a class="button" href="/images/qrcodes/<%= qr_image %>.png" download>Скачать файл</a>
+            </div>
+        </div>
+        <footer>
+        </footer>
+    </body>
+</html>
