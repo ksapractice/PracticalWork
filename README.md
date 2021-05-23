@@ -1,5 +1,5 @@
-# getDataMysql
- 
+# PracticalWork
+
 #### Install
 * Install `Node.js`
 * Run `npm i` to install dependencies
