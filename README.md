@@ -3,7 +3,7 @@
 # PracticalWork
 
 #### Install
-* Install `Node.js`
+* Install `Node.js v14.x`
 * Run `npm i` to install dependencies
 
 #### Create file
