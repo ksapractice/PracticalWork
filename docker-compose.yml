@@ -16,8 +16,14 @@ services:
       - ./mysql:/var/lib/mysql
   web:
     build: ./server
+    environment:
+      DB_HOST: db
+      DB_USER: testuser
+      DB_PASS: test
+      DB_NAME: mysql_db
+      DB_TABLE_NAME: devicemovingview
+      site: localhost
     command: node app.js
-    # env cltkfnm
     ports:
       - '80:3000'
     depends_on:
