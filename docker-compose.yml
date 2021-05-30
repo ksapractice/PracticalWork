@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: mysql_db
+      MYSQL_ROOT_PASSWORD: qwedsaqwe
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: test
+    ports:
+      - '3306:3306'
+    security_opt:
+      - seccomp:unconfined
+    volumes:
+      - ./mysql:/var/lib/mysql
+  web:
+    build: ./server
+    command: node app.js
+    # env cltkfnm
+    ports:
+      - '80:3000'
+    depends_on:
+      - db
+    restart: on-failure
