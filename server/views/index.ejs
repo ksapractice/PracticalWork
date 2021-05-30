@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Главная</title>
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/png">
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <!-- <meta http-equiv="Refresh" content="1" /> -->
+    </head>
+    <body>
+        <header>
+                <nav class="menu">
+                    <span>
+                        <a href="/">Главная</a>
+                    </span>
+                    <span>
+                        <a href="/qrcode">QRcode</a>
+                    </span>
+                    <span>
+                        <form class="search" action='/order_info/' method='get'>
+                            <input type="text"  placeholder="Поиск..." name="code">
+                            <button type="submit"></button>
+                        </form>
+                    </span>
+                </nav>
+        </header>
+
+        <div class="container">
+            <h1>Главная</h1>
+            <div class="button-container">
+                <a class="button" href="/qrcode">Получить QRcode</a>
+            <!--    <a class="button"> Найти товар</a>-->
+             <!--   <a class="button" href="/order_info/"> Вся таблица</a> -->
+            </div>
+        </div>
+        <footer>
+        </footer>
+    </body>
+</html>
