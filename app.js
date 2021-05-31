@@ -33,6 +33,14 @@ connection.query(sql, function(err, results) {
 });
 
 /*<---   Daily event        --->*/
+function first() {
+    datecode.year = now.getFullYear();
+    datecode.month = now.getMonth();
+    datecode.day = now.getDate();
+    datecode.num = 0;
+	fs.writeFile('./utils/data_code.json', JSON.stringify(datecode, null, '\t'), (err)=>{if(err) console.log(err)});
+}
+first();
 ontime({
     cycle: '23:59:59'
 }, function (ot) {
