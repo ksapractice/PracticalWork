@@ -15,7 +15,7 @@ services:
     volumes:
       - ./mysql:/var/lib/mysql
   web:
-    build: ./server
+    build: .
     environment:
       DB_HOST: db
       DB_USER: testuser
