@@ -2,29 +2,15 @@
 <html>
     <head>
         <title>QRcode</title>
-        <link rel="shortcut icon" href="/images/favicon.ico" type="image/png">
-        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <%- include("partials/links.ejs") %>
     </head>
     <body>
-        <header>
-                <nav class="menu">
-                    <span>
-                        <a href="/">Главная</a>
-                    </span>
-                    <span>
-                        <a href="/qrcode">QRcode</a>
-                    </span>
-                    <span>
-                        <form class="search" action='/order_info/' method='get'>
-                            <input type="text"  placeholder="Поиск..." name="code">
-                            <button type="submit"></button>
-                        </form>
-                    </span>
-                </nav>
-        </header>
+        <%- include("partials/header.ejs") %>
 
+
+        
         <div class="container">
-            <h1>Новый QRcode: <br><%= qr_image %></h1>
+             <h1>Новый QRcode: <br><%= qr_image %></h1>
             <div class="QRimage">
                 <img src="/images/qrcodes/<%= qr_image %>.png">
             </div>
@@ -32,7 +18,7 @@
                 <a class="button" href="/images/qrcodes/<%= qr_image %>.png" download>Скачать файл</a>
             </div>
         </div>
-        <footer>
-        </footer>
+
+        <%- include("partials/footer.ejs") %>
     </body>
 </html>

@@ -3,9 +3,11 @@
   box-sizing: border-box;
  font-family: 'Fira Code', monospace; 
 }
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
 body {
   background: linear-gradient(90deg, #9437eb 0%, rgba(55,127,235,1) 50%, rgba(148,55,235,1) 100%);
-  /* display: flex; */
   padding: 0;
   margin: 0;
 }
@@ -40,8 +42,7 @@ h1 {
   text-align: left;
   font-weight: bold;
 }
-.content-table th,
-.content-table td {
+.content-table th, .content-table td {
   padding: 5px 8px;
 }
 .content-table tbody tr {
@@ -51,36 +52,15 @@ h1 {
 .content-table tbody tr:last-of-type {
   border-bottom: 8px solid rgb(46, 109, 95);
 }
-
-
-/*header and еtc*/
-
-/* header {
-    margin: 0;  
-    color: rgb(255, 255, 255);
-    background-color: rgb(39, 37, 37);
-    font-weight: bold;
-    font-size: 20px;
-    display: flex;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    height: 60px;
-    
-} */
-
-
-
 .QRimage {
   display: block; 
   justify-content: center;
   align-items: center;
   text-align: center;
 }
-
-.QRimage img{border-radius: 16px;}
-
+.QRimage img{
+  border-radius: 16px;
+}
 .button {
   text-decoration: none;
   outline: none;
@@ -94,76 +74,71 @@ h1 {
   text-transform: uppercase;
   letter-spacing: 2px;
   font-weight: 500;
-  color: rgb(255, 255, 255);
-  background: rgb(94, 92, 92);
+  color: #ffffff;
+  background: #5e5c5c;
   box-shadow: 0px 8px 15px rgb(0 0 0 / 10%);
   transition: .3s;
   text-align: center;
   vertical-align: middle;
   border: solid 1px #333;
 }
-
 .button:hover {
   background: #6825a7;
   box-shadow: 0 15px 20px rgba(26, 87, 87, 0.4);
   color: white;
   transform: translateY(-7px);
 }
-
 .button-container {
     text-align: center;
 }
-
 footer {
-  color: rgb(255, 255, 255);
   background-color: #272525;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
+  text-align: center;
   height: 45px;
+  line-height: 45px;
   position: fixed; 
   left: 0; bottom: 0;
   width: 100%;
 }
-
-/*search and еtc*/
-
-
-/* input::placeholder {
-  font-family: 'Fira Code', monospace;
-  font-size: 17px;
-  color: #969696;
-} */
-
-/* .search-input {
-  width: 250px;
-  border: 0;
-  background-color: transparent;
-  font-weight: bold;
-  font-family: 'Fira Code', monospace;
-  outline: none;
-  color: #fff;
-  border-bottom: 2px solid transparent;
-  transition: .4s cubic-bezier(0, 0.8, 0, 1);
+.qform {
+  width:400px;  
+  margin: 50px auto 0;
   text-align: center;
-} */
-
-/* input:focus {
-  border-bottom: 2px solid #ffffff;
-} */
- 
-/* header center {
-  display: flex;
-  justify-content: space-between;
-  width: 350px;
-} */
-
-
-
-
-
-
-/* TEST */
+}
+.qform label {
+  color: #fff;
+  font-size: 20px;
+}
+.qform input {
+  text-align: center;
+  outline: none;
+  margin: 5px;
+  margin-bottom: 15px;
+}
+.inpu {
+  width: 300px;
+}
+.date {
+  width: 70px;
+}
+.inpu, .date {
+  border-radius: 8px;
+  height: 30px;
+  border: none;
+  background: #fffefe; 
+}
+.but {
+  width: 140px;
+  height: 40px;
+  background-color: #5e5c5c;
+  color: #fff;
+  border-radius: 30px;
+  border: solid 1px #333;
+}
+.but:hover {
+  background: #6825a7;
+  box-shadow: 0 15px 20px rgba(26, 87, 87, 0.4);
+}
 header {
   height: 80px;
   background-color: #222;
@@ -190,7 +165,7 @@ header span {
   position: relative;
   left: 14%;  
 }
-form {
+.search {
   position: relative;
   width: 250px;
   left: 45%;
@@ -222,4 +197,17 @@ form {
   font-size: 22px;
   font-weight: bold;
   line-height: 26px;
+}
+.minus, .plus {
+  border: 1px solid #333;
+  background: #5e5c5c;
+  color: #ffffff;
+  height: 25px;
+  width: 25px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+.minus:hover, .plus:hover {
+  background: #6825a7;
+  box-shadow: 0 15px 20px rgba(26, 87, 87, 0.4);
 }

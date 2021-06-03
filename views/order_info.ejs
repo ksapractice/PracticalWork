@@ -2,26 +2,10 @@
 <html>
     <head>
         <title><%= serial %></title>
-        <link rel="shortcut icon" href="/images/favicon.ico" type="image/png">
-        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <%- include("partials/links.ejs") %>
     </head> 
     <body>
-        <header>
-                <nav class="menu">
-                    <span>
-                        <a href="/">Главная</a>
-                    </span>
-                    <span>
-                        <a href="/qrcode">QRcode</a>
-                    </span>
-                    <span>
-                        <form class="search" action='/order_info/' method='get'>
-                            <input type="text"  placeholder="Поиск..." name="code">
-                            <button type="submit"></button>
-                        </form>
-                    </span>
-                </nav>
-        </header>
+        <%- include("partials/header.ejs") %>
 
         <div class="container">
             <h1>Серийный номер: <%= serial %></h1>
@@ -43,7 +27,7 @@
                 </tbody>
             </table>
         </div>
-        <footer>
-        </footer>
+
+        <%- include("partials/footer.ejs") %>
     </body>
 </html>
