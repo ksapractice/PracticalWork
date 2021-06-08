@@ -25,7 +25,10 @@ body {
 h1 {
   text-align: center;
   padding-top: 20px;
-  padding-bottom: 20px;
+  color: #fff;
+}
+h2 {
+  text-align: center;
   color: #fff;
 }
 .content-table {
@@ -59,7 +62,8 @@ h1 {
   text-align: center;
 }
 .QRimage img{
-  border-radius: 16px;
+  border-radius: 8px;
+  max-width: 340px;
 }
 .button {
   text-decoration: none;
@@ -73,11 +77,9 @@ h1 {
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 2px;
-  font-weight: 500;
   color: #ffffff;
   background: #5e5c5c;
   box-shadow: 0px 8px 15px rgb(0 0 0 / 10%);
-  transition: .3s;
   text-align: center;
   vertical-align: middle;
   border: solid 1px #333;
@@ -86,7 +88,6 @@ h1 {
   background: #6825a7;
   box-shadow: 0 15px 20px rgba(26, 87, 87, 0.4);
   color: white;
-  transform: translateY(-7px);
 }
 .button-container {
     text-align: center;
@@ -109,8 +110,9 @@ footer {
   color: #fff;
   font-size: 20px;
 }
-.qform input {
+.qform input, select {
   text-align: center;
+  text-align-last: center;
   outline: none;
   margin: 5px;
   margin-bottom: 15px;
@@ -211,3 +213,4 @@ header span {
   background: #6825a7;
   box-shadow: 0 15px 20px rgba(26, 87, 87, 0.4);
 }
+

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>QRcode</title>
+        <%- include("partials/links.ejs") %>
+    </head>
+    <body>
+        <%- include("partials/header.ejs") %>
+
+        <div class="container">
+             <h1>QRcode лист:</h1> <h2>От: <%= code_min %> <br>До: <%= code_max %></h2>
+            <div class="QRimage">
+                <img src="/images/qrcodes/lists/<%= list %>.png">
+            </div>
+            <div class="QRimage">
+                <a class="button" href="/images/qrcodes/lists/<%= list %>.png" download>Скачать файл</a>
+            </div>
+        </div>
+
+        <%- include("partials/footer.ejs") %>
+    </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>QRcode</title>
+        <%- include("partials/links.ejs") %>
+        <script type="text/javascript" src="/javascripts/jquery-1.7.2.min.js"></script>
+    </head>
+    <body>
+        <style>
+            #font {margin: "0 auto;"}
+        </style>
+        <%- include("partials/header.ejs") %>
+
+        <div class="container">
+            <form action="/qrcode" method="post" class="qform">
+                <label>Партия:</label><br>
+                <input required type="number" placeholder="Введите номер партии" name="lot" class="inpu"><br>
+                <label>Код устройства:</label><br>
+                    <input required type="number" list="code" placeholder="Введите код устройства" name="codee" class="inpu"><br>
+                <label>Устройство в партии:</label><br>
+                    <button class="minus">-</button>
+                        <input required type="number" placeholder="Введите номер устройства" name="num_code_lot" class="inpu math" value="1"> 
+                        <button class="plus">+</button>
+
+                    <br>
+
+                <label>Месяц / Год</label><br>
+                    <input required type="number" value="01" name="month" class="date">
+                    <input required type="number" value="21" name="year" class="date">
+                <p>
+                    <input type="submit" value="Получить" class="but">
+                    <input type="reset" value="Очистить" class="but">
+                </p>
+            </form>
+        </div>
+
+        <%- include("partials/footer.ejs") %>
+
+        <script type="text/javascript" >
+            $(document).ready(function() {
+                $('.minus').click(function () {
+                    var $input = $(this).parent().find('.math');
+                    var count = parseInt($input.val()) - 1;
+                    count = count < 1 ? 1 : count;
+                    $input.val(count);
+                    $input.change();
+                    return false;
+                });
+                $('.plus').click(function () {
+                    var $input = $(this).parent().find('.math');
+                    $input.val(parseInt($input.val()) + 1);
+                    $input.change();
+                    return false;
+                });
+            });	
+        </script>
+    </body>
+</html>

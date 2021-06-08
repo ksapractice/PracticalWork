@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>QRcode</title>
+            <%- include("partials/links.ejs") %>
+            <script type="text/javascript" src="/javascripts/jquery-1.7.2.min.js"></script>
+    </head>
+    <body>
+        <style>
+            #font {margin: "0 auto;"}
+        </style>
+        <%- include("partials/header.ejs") %>
+
+        <div class="container">
+            <form action="/qrcode_list" method="post" class="qform" onsubmit="deleteName(this);return false">
+                <label>Партия:</label><br>
+                <input required type="number" placeholder="Введите номер партии" name="lot" class="inpu"><br>
+                <label>Код устройства:</label><br>
+                    <input required type="number" list="code" placeholder="Введите код устройства" name="codee" class="inpu"><br>
+                    <datalist id="code">
+                    </datalist>
+                <label>Устройства в партии:</label>
+                <br>
+                  <input class="date" placeholder="от" type="number" name="min" id="min">
+                  <input class="date" placeholder="до" type="number" name="max" id="max">
+
+                <br>
+
+                <label>Месяц / Год</label><br>
+                    <input required type="number" value="01" name="month" class="date">
+                    <input required type="number" value="21" name="year" class="date">
+                <p>
+                    <input type="submit" value="Получить" class="but" >
+                    <input type="reset" value="Очистить" class="but">
+                </p>
+            </form>
+        </div>
+
+        <%- include("partials/footer.ejs") %>
+        <script type="text/javascript" >
+            function deleteName(f) {
+                let min = parseInt(document.getElementById('min').value);
+                let max = parseInt(document.getElementById('max').value);
+                let sum = max - min;
+                let needDel = max-(119+min)
+                let message = 'Уберите ' + needDel + ' устройства'
+                if (sum >= 120) {
+                    alert(message); 
+                    return false;
+                } else {
+                    f.submit();
+                }
+            }
+        </script>   
+    </body>
+</html>
