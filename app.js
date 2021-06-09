@@ -205,7 +205,7 @@ app.post("/qrcode_list", urlencodedParser, function (req, res) {
             });
         });
     }
-    setTimeout(myFunc, 2000);
+    setTimeout(myFunc, 5000);
 });
 
 /*<---   Site pages END   --->*/
