@@ -6,14 +6,14 @@ var bodyParser = require('body-parser'),
     path = require('path'),
     url = require('url'),
     app = express();
-//я
+
 var connection = require('./utils/database');
-//у
+
 app.set('views', 'views');
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 const urlencodedParser = bodyParser.urlencoded({extended: false});
-//с
+
 const sql = `CREATE TABLE IF NOT EXISTS devicemovingview (
     Stamp text,
     Serial text,
@@ -23,11 +23,27 @@ const sql = `CREATE TABLE IF NOT EXISTS devicemovingview (
     Exit_date text,
     Sender text,
     Recipient text
-  )`;
-connection.query(sql, function(err, results) {
+)`;
+    connection.query(sql, function(err, results) {
     if(err) console.log(err);
-});
-//т
+    });
+
+const sql2 = `CREATE TABLE IF NOT EXISTS db_info (
+    id int,
+    create_date timestamp,
+    version varchar(255),
+    major int,
+    minor int,
+    path int,
+    PRIMARY KEY (id)
+    );
+`;
+connection.query(sql2, function(err, results) {
+    if(err) console.log(err);
+    });
+connection.query(`INSERT IGNORE INTO db_info (id, create_date) VALUES('1',Now())`);
+
+
 /*<---     Site pages     --->*/
     /*<---     Index     --->*/
         app.get('/', function(req, res){
@@ -39,7 +55,7 @@ connection.query(sql, function(err, results) {
             let urlRequest = url.parse(req.url, true);
             let code = String(urlRequest.query.code);
             var queue = `SELECT * FROM ${process.env.DB_TABLE_NAME} where Serial = '${code}'`;  
-        
+
             connection.query(queue, function(err, rows, fields) {
                 let str = '';
                 for (var i in rows) {
@@ -72,9 +88,15 @@ connection.query(sql, function(err, results) {
                                 </tbody>
                             `
                 if (rows < 1) {tabl = ``; code = 'Не найден'};
-                res.render("order_info", {
-                    serial: code, 
-                    database: tabl
+
+                connection.query(`SELECT create_date FROM db_info`, function(err, rows, fields) {
+                    let date = rows[0].create_date;
+
+                    res.render("order_info", {
+                        serial: code, 
+                        database: tabl,
+                        dat: date.toLocaleString()
+                    });
                 });
             });
         });
@@ -121,6 +143,7 @@ app.post("/qrcode", urlencodedParser, function (req, res) {
         const outputFile = `./public/images/qrcodes/${code}.png`;
         image.write(outputFile, function() {
             connection.query(`INSERT IGNORE INTO ${process.env.DB_TABLE_NAME} VALUES('', '${code}', '', '', '', '', '', '')`);
+            connection.query(`UPDATE db_info SET create_date=Now() WHERE id = '1'`);
 
             res.render('qrcode', {
                 qr_image: code
@@ -139,7 +162,8 @@ app.post("/qrcode_list", urlencodedParser, function (req, res) {
     for (let i = cmin; i <= cmax; i++) {
         let code = `${req.body.lot}-${req.body.codee}-${i}-${req.body.month}.${req.body.year}`;
         connection.query(`INSERT IGNORE INTO ${process.env.DB_TABLE_NAME} VALUES('', '${code}', '', '', '', '', '', '')`);
-//а
+        connection.query(`UPDATE db_info SET create_date=Now() WHERE id = '1'`);
+
         QRCode.toFile(
             `public/images/qrcodes/${code}.png`, 
             `http://${process.env.site}/order_info/?code=${code}`,
@@ -169,7 +193,7 @@ app.post("/qrcode_list", urlencodedParser, function (req, res) {
             image.write(outputFile);
         });
     }
-//л
+
     function myFunc() {
         let max_count = cmax-cmin;
 
@@ -178,7 +202,7 @@ app.post("/qrcode_list", urlencodedParser, function (req, res) {
             let left = 0;
             let down = 0;
             let codec = cmin;
-
+    
             do {
                 var code = `${req.body.lot}-${req.body.codee}-${codec}-${req.body.month}.${req.body.year}`;
                 let qrcode_same = await Jimp.read(`./public/images/qrcodes/${code}.png`);
@@ -205,7 +229,14 @@ app.post("/qrcode_list", urlencodedParser, function (req, res) {
             });
         });
     }
-    setTimeout(myFunc, 1000);
+    setTimeout(myFunc, 5000);
+});
+
+/*<---     TEST     --->*/
+app.get('/testpage', urlencodedParser, function(req, res){
+    res.render('testpage', {
+        opt_code: [123, 12]
+    });
 });
 
 /*<---   Site pages END   --->*/

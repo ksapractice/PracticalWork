@@ -23,7 +23,7 @@ services:
       DB_NAME: mysql_db
       DB_TABLE_NAME: devicemovingview
       site: localhost
-    command: node app.js
+      command: sh -c "sleep 30s && node app.js"
     ports:
       - '80:3000'
     depends_on:
