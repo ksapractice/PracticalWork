@@ -232,15 +232,8 @@ app.post("/qrcode_list", urlencodedParser, function (req, res) {
     setTimeout(myFunc, 5000);
 });
 
-/*<---     TEST     --->*/
-app.get('/testpage', urlencodedParser, function(req, res){
-    res.render('testpage', {
-        opt_code: [123, 12]
-    });
-});
-
 /*<---   Site pages END   --->*/
 app.listen(3000, function(){
     console.log('Server running');
 });
-// жопа
+// конец
