@@ -14,7 +14,8 @@
   * DB_PASS = `db password`
   * DB_NAME = `db name`
   * DB_TABLE_NAME = `db table name`
-  * site = `webserver host name/ip`
+  * site = `webserver host name/ip`=
+  * admin_pass = `your password`
 
 #### Finish
 * Run `app.js`
