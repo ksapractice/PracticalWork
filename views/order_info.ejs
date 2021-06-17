@@ -8,12 +8,12 @@
         <%- include("partials/header.ejs") %>
 
         <div class="container">
-            <h1>Серийный номер: <%= serial %></h1>
+            <h1>Серийный номер: <%- brode %><%= serial %></h1>
             <table class="content-table">
                     <%- database %>
             </table>
             
-            <h5>База приборов от: <%- dat %></h5>
+            <h5>База приборов от: <%= dat %></h5>
         </div>
 
         <%- include("partials/footer.ejs") %>

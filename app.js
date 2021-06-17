@@ -1,10 +1,14 @@
 require('dotenv').config();
-var bodyParser = require('body-parser'),
+var session = require('express-session'),
+    bodyParser = require('body-parser'),
+    csv = require("fast-csv-delims"),
     express = require('express'),
+    multer  = require('multer'),
     QRCode = require('qrcode'),
     Jimp = require('jimp'),
     path = require('path'),
     url = require('url'),
+    fs = require("fs"),
     app = express();
 
 var connection = require('./utils/database');
@@ -12,9 +16,14 @@ var connection = require('./utils/database');
 app.set('views', 'views');
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+    secret: '2DEB-ILA4-JQPA0EJA',
+    resave: true,
+    saveUninitialized: true
+}));
 const urlencodedParser = bodyParser.urlencoded({extended: false});
 
-const sql = `CREATE TABLE IF NOT EXISTS devicemovingview (
+var sql = `CREATE TABLE IF NOT EXISTS ${process.env.DB_TABLE_NAME} (
     Stamp text,
     Serial text,
     Production_date text,
@@ -23,12 +32,12 @@ const sql = `CREATE TABLE IF NOT EXISTS devicemovingview (
     Exit_date text,
     Sender text,
     Recipient text
-)`;
+) ENGINE=MYISAM `;
     connection.query(sql, function(err, results) {
     if(err) console.log(err);
     });
 
-const sql2 = `CREATE TABLE IF NOT EXISTS db_info (
+var sql2 = `CREATE TABLE IF NOT EXISTS db_info (
     id int,
     create_date timestamp,
     version varchar(255),
@@ -43,7 +52,6 @@ connection.query(sql2, function(err, results) {
     });
 connection.query(`INSERT IGNORE INTO db_info (id, create_date) VALUES('1',Now())`);
 
-
 /*<---     Site pages     --->*/
     /*<---     Index     --->*/
         app.get('/', function(req, res){
@@ -55,7 +63,7 @@ connection.query(`INSERT IGNORE INTO db_info (id, create_date) VALUES('1',Now())
             let urlRequest = url.parse(req.url, true);
             let code = String(urlRequest.query.code);
             var queue = `SELECT * FROM ${process.env.DB_TABLE_NAME} where Serial = '${code}'`;  
-
+            let brod = "";
             connection.query(queue, function(err, rows, fields) {
                 let str = '';
                 for (var i in rows) {
@@ -71,47 +79,49 @@ connection.query(`INSERT IGNORE INTO db_info (id, create_date) VALUES('1',Now())
                     </tr>`;
                 };
                 let tabl = `
-                                <thead>
-                                    <tr>
-                                        <td>#</td>
-                                        <td>Марка</td>
-                                        <td>Дата производства</td>
-                                        <td>Объект</td>
-                                        <td>Дата прихода</td>
-                                        <td>Дата ухода</td>
-                                        <td>Отправил</td>
-                                        <td>Получил</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                ${str}
-                                </tbody>
-                            `
-                if (rows < 1) {tabl = ``; code = 'Не найден'};
-
+                    <thead>
+                        <tr>
+                            <td>#</td>
+                            <td>Марка</td>
+                            <td>Дата производства</td>
+                            <td>Объект</td>
+                            <td>Дата прихода</td>
+                            <td>Дата ухода</td>
+                            <td>Отправил</td>
+                            <td>Получил</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    ${str}
+                    </tbody>
+                `
+                if (rows < 1) {tabl = ``;brod = `${code} <br>`; code = `Не найден`; };
                 connection.query(`SELECT create_date FROM db_info`, function(err, rows, fields) {
                     let date = rows[0].create_date;
 
                     res.render("order_info", {
                         serial: code, 
                         database: tabl,
+                        brode: brod,
                         dat: date.toLocaleString()
                     });
                 });
             });
         });
     /*<---     /Order info     --->*/
-app.get('/generate', function(req, res){
-    res.render('generate');
-});
-app.get('/generate_single', urlencodedParser, function(req, res){
-    res.render('generate_single');
-});
-app.get('/generate_array', urlencodedParser, function(req, res){
-    res.render('generate_array');
-});
-
-app.post("/qrcode", urlencodedParser, function (req, res) {
+    /*<---     Generate pages     --->*/
+        app.get('/generate', function(req, res){
+            res.render('generate');
+        });
+        app.get('/generate_single', urlencodedParser, function(req, res){
+            res.render('generate_single');
+        });
+        app.get('/generate_array', urlencodedParser, function(req, res){
+            res.render('generate_array');
+        });
+    /*<---     /Generate pages     --->*/
+    /*<---     QRcodes     --->*/
+        app.post("/qrcode", urlencodedParser, function (req, res) {
     let code = `${req.body.lot}-${req.body.codee}-${req.body.num_code_lot}-${req.body.month}.${req.body.year}`;
 
     QRCode.toFile(
@@ -142,17 +152,14 @@ app.post("/qrcode", urlencodedParser, function (req, res) {
 
         const outputFile = `./public/images/qrcodes/${code}.png`;
         image.write(outputFile, function() {
-            connection.query(`INSERT IGNORE INTO ${process.env.DB_TABLE_NAME} VALUES('', '${code}', '', '', '', '', '', '')`);
-            connection.query(`UPDATE db_info SET create_date=Now() WHERE id = '1'`);
 
             res.render('qrcode', {
                 qr_image: code
             });
         });
     });
-});
-
-app.post("/qrcode_list", urlencodedParser, function (req, res) {
+        });
+        app.post("/qrcode_list", urlencodedParser, function (req, res) {
     let code_min = `${req.body.lot}-${req.body.codee}-${req.body.min}-${req.body.month}.${req.body.year}`;
     let code_max = `${req.body.lot}-${req.body.codee}-${req.body.max}-${req.body.month}.${req.body.year}`;
 
@@ -161,8 +168,6 @@ app.post("/qrcode_list", urlencodedParser, function (req, res) {
 
     for (let i = cmin; i <= cmax; i++) {
         let code = `${req.body.lot}-${req.body.codee}-${i}-${req.body.month}.${req.body.year}`;
-        connection.query(`INSERT IGNORE INTO ${process.env.DB_TABLE_NAME} VALUES('', '${code}', '', '', '', '', '', '')`);
-        connection.query(`UPDATE db_info SET create_date=Now() WHERE id = '1'`);
 
         QRCode.toFile(
             `public/images/qrcodes/${code}.png`, 
@@ -230,10 +235,126 @@ app.post("/qrcode_list", urlencodedParser, function (req, res) {
         });
     }
     setTimeout(myFunc, 5000);
-});
+        });
+    /*<---     /QRcodes     --->*/
+    /*<---     Auth     --->*/
+        var auth = function(req, res, next) {
+    if (req.session && req.session.user === "admin" && req.session.admin)
+      return next();
+    else
+      return res.sendStatus(401);
+        };
+        app.get('/login', function (req, res) {
+    if(req.query.username === "admin" && req.query.password === `${process.env.admin_pass}`) {
+        req.session.user = "admin";
+        req.session.admin = true;
+
+        res.render('auth_perm', {
+            url: '/update',
+            dat: 'Авторизация успешна'
+        });
+    } else {
+        res.render('auth_perm', {
+            url: '/auth',
+            dat: 'Авторизация не успешна'
+        });
+    }
+        });
+        app.get('/auth', urlencodedParser, function(req, res){
+    res.render('auth');
+        });
+    /*<---     /Auth     --->*/
+    /*<---     Logout     --->*/
+        app.get('/logout', function (req, res) {
+    req.session.destroy();
+    res.render('auth_perm', {
+        url: '/',
+        dat: 'Выход успешен'
+    });
+        });
+    /*<---     /Logout     --->*/
+    /*<---     Update_DB     --->*/
+        app.get('/update', urlencodedParser, auth, function(req, res){
+            res.render('update');
+        });
+
+        var storage = multer.diskStorage({
+            destination: (req, file, cb) =>{
+                cb(null, "uploads");
+            },
+            filename: (req, file, cb) =>{
+                cb(null, 'Device_Moving_View.csv');
+            }
+        });
+        const fileFilter = (req, file, cb) => {
+            if(file.mimetype === "application/vnd.ms-excel" ){
+                cb(null, true);
+            }
+            else{
+                cb(null, false);
+            }
+        };
+        var upload = multer({ storage: storage, fileFilter: fileFilter})
+
+        app.post("/update/rest", upload.single('fef'), auth, function (req, res){
+            let filedata = req.file;
+            if(!filedata){
+                res.render('auth_perm', {
+                    url: '/update',
+                    dat: 'Ошибка при загрузке файла'
+                });
+            }else{
+                connection.query(`UPDATE db_info SET create_date=Now() WHERE id = '1'`);
+                connection.query(`DELETE FROM ${process.env.DB_TABLE_NAME}`);
+                csv_add();
+
+                res.render('auth_perm', {
+                    url: '/',
+                    dat: 'Успешно выполнено'
+                });
+            }
+        });
+        app.post("/update/add", upload.single('fef'), auth, function (req, res){
+            let filedata = req.file;
+            if(!filedata) {
+                res.render('auth_perm', {
+                    url: '/update',
+                    dat: 'Ошибка при загрузке файла'
+                });
+            }else{
+                connection.query(`UPDATE db_info SET create_date=Now() WHERE id = '1'`);
+                csv_add();
+
+                res.render('auth_perm', {
+                    url: '/',
+                    dat: 'Успешно выполнено'
+                });
+            }
+        });
+    /*<---     /Update_DB     --->*/
+
+
 
 /*<---   Site pages END   --->*/
 app.listen(3000, function(){
     console.log('Server running');
 });
 // конец
+
+function csv_add() {
+    let csvData = [];
+    var stream = fs.createReadStream("uploads/Device_Moving_View.csv");
+        csv(stream, {delimiter: ';'})
+            .on("data", function(data){
+                csvData.push(data);
+            })
+            .on("end", function(){
+                csvData.shift();
+                // console.log(csvData)
+                let query =`INSERT INTO ${process.env.DB_TABLE_NAME} (Stamp, Serial, Production_date, Objectt, Coming_date, Exit_date, Sender, Recipient) VALUES ?`;
+                connection.query(query, [csvData], (err, results) => {
+                    // console.log(err || results);
+                });
+            })
+            .parse();
+};

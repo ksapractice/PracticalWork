@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Авторизация</title>
+        <%- include("partials/links.ejs") %>
+    </head>
+    <body>
+        <%- include("partials/header.ejs") %>
+
+
+        
+        <div class="container">
+            <h1>Авторизация</h1>
+            <form class="qform" method="GET" action='/login'>
+                <input class="inpu" name='username' placeholder="Логин" id="username" >
+                <br>
+                <input class="inpu" type="password" name="password" placeholder="Пароль" id="password">
+                <br>
+                <div class="button-container">
+                    <input type="submit" class="but" value="Войти">
+                </div>
+                <br>
+            </form>
+        </div>
+
+        <%- include("partials/footer.ejs") %>
+    </body>
+</html>

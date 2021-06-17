@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Главная</title>
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/png">
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <script type="text/javascript" src="/javascripts/jquery-1.7.2.min.js"></script>
+        <!-- <meta http-equiv="Refresh" content="1" /> -->
+    </head>
+    <body>
+        <%- include("partials/header.ejs") %>
+
+        <div class="container">
+            <h1>Обновление базы данных</h1>
+            <p>* делиметр <code>;</code> <br>* загружать файлы csv в кодировке <code>utf8</code></p>
+            <form class="qform" action="/update_db" method="post" enctype="multipart/form-data">
+                <input type="file" class="inputfile" id="file" name="fef" value="1" multiple="">
+                <label for="file" class="file_label">
+                    <figure>
+                    <div class="width">
+                        <svg fill="white"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                            viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
+                        <path class="st0" d="M9.3,0H4C2.9,0,2,0.9,2,2v12c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4.7c0-0.3-0.1-0.5-0.3-0.7L10,0.3
+                            C9.8,0.1,9.6,0,9.3,0z M9.5,3.5v-2l3,3h-2C9.9,4.5,9.5,4.1,9.5,3.5z M6.4,9.9C6.2,10,5.8,10,5.6,9.9s-0.2-0.5,0-0.7l2-2
+                            C7.8,7,8.2,7,8.4,7.1c0,0,0,0,0,0l2,2c0.2,0.2,0.2,0.5,0,0.7s-0.5,0.2-0.7,0L8.5,8.7v3.8C8.5,12.8,8.3,13,8,13
+                            c-0.3,0-0.5-0.2-0.5-0.5V8.7L6.4,9.9z"/>
+                        </svg>
+                    </div>
+                        <br>
+                        <span></span>
+                    </figure>
+                </label>
+                <div class="button-container">
+                    <input type="submit" class="but" formaction='/update/rest' value="Перезаписать таблицу">
+                    <input type="submit" class="but" formaction='/update/add' value="Добавить новые данные">
+                </div>
+            </form>
+            <br>
+            <div class="button-container">
+                <a class="button-exit" href="/logout">Выйти</a>
+            </div>
+        </div>
+
+        <%- include("partials/footer.ejs") %>
+        <script>
+            $(document).ready(function() {
+            $('.inputfile').change(function() {
+            if (this.files[0]) 
+            $('.file_label span').text(this.files[0].name);
+         });
+            });
+        </script>
+    </body>
+</html>
