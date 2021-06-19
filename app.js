@@ -350,10 +350,10 @@ function csv_add() {
             })
             .on("end", function(){
                 csvData.shift();
-                // console.log(csvData)
+                //console.log(csvData)
                 let query =`INSERT INTO ${process.env.DB_TABLE_NAME} (Stamp, Serial, Production_date, Objectt, Coming_date, Exit_date, Sender, Recipient) VALUES ?`;
                 connection.query(query, [csvData], (err, results) => {
-                    // console.log(err || results);
+                    console.log(err || results);
                 });
             })
             .parse();
