@@ -345,15 +345,21 @@ function csv_add() {
     let csvData = [];
     var stream = fs.createReadStream("uploads/Device_Moving_View.csv");
         csv(stream, {delimiter: ';'})
+            .validate(function(data){
+                return !/[A-Za-zа-яА-Я]/g.test(data[1]);
+            })
+            .on("data-invalid", function(data){
+                data.splice(1, 1, `${data[1].replace(/[^-.\d]/g, '')}`);
+                csvData.push(data);
+            })
             .on("data", function(data){
                 csvData.push(data);
             })
             .on("end", function(){
                 csvData.shift();
-                // console.log(csvData)
                 let query =`INSERT INTO ${process.env.DB_TABLE_NAME} (Stamp, Serial, Production_date, Objectt, Coming_date, Exit_date, Sender, Recipient) VALUES ?`;
                 connection.query(query, [csvData], (err, results) => {
-                    // console.log(err || results);
+                    console.log(err || results);
                 });
             })
             .parse();
