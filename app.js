@@ -286,16 +286,15 @@ connection.query(`INSERT IGNORE INTO db_info (id, create_date) VALUES('1',Now())
                 cb(null, 'Device_Moving_View.csv');
             }
         });
-        /*const fileFilter = (req, file, cb) => {
-            if(file.mimetype === "application/vnd.ms-excel" ){
+        const fileFilter = (req, file, cb) => {
+            if((file.mimetype === "application/vnd.ms-excel") || (file.mimetype === "text/csv")){
                 cb(null, true);
             }
             else{
                 cb(null, false);
             }
-        };*/
-        //var upload = multer({ storage: storage, fileFilter: fileFilter})
-        var upload = multer({ storage: storage})
+        };
+        var upload = multer({ storage: storage, fileFilter: fileFilter})
         app.post("/update/rest", upload.single('fef'), auth, function (req, res){
             let filedata = req.file;
             if(!filedata){
