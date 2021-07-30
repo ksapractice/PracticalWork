@@ -13,9 +13,8 @@ services:
     security_opt:
       - seccomp:unconfined
     volumes:
+#
       - ./mysql:/var/lib/mysql
-    restart: on-failure
-
   web:
     build: .
     environment:
